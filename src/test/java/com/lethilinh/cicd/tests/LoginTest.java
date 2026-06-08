@@ -37,6 +37,13 @@ public class LoginTest {
         Assert.assertTrue(loginPage.isLoginSuccessful(), "Đăng nhập thất bại!");
     }
 
+    @Test
+    public void testFailedLogin() {
+        loginPage.enterCredentials("standard_user", "wrong_password");
+        loginPage.clickLogin();
+        Assert.assertFalse(loginPage.isLoginSuccessful(), "Đăng nhập đáng lẽ phải thất bại!");
+    }
+
     @AfterMethod
     public void tearDown() {
         if (driver != null) {
