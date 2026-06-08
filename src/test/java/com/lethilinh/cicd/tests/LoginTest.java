@@ -30,18 +30,18 @@ public class LoginTest {
         loginPage = new LoginPage(driver);
     }
 
-        @Test
-    public void testStandardUserLogin() {
+    @Test
+    public void testSuccessfulLogin() {
         loginPage.enterCredentials("standard_user", "secret_sauce");
         loginPage.clickLogin();
-        Assert.assertTrue(loginPage.isLoginSuccessful(), "Đăng nhập bằng standard_user thất bại!");
+        Assert.assertTrue(loginPage.isLoginSuccessful(), "Đăng nhập thất bại!");
     }
 
     @Test
-    public void testProblemUserLogin() {
-        loginPage.enterCredentials("problem_user", "secret_sauce");
+    public void testFailedLogin() {
+        loginPage.enterCredentials("standard_user", "wrong_password");
         loginPage.clickLogin();
-        Assert.assertTrue(loginPage.isLoginSuccessful(), "Đăng nhập bằng problem_user thất bại!");
+        Assert.assertFalse(loginPage.isLoginSuccessful(), "Đăng nhập đáng lẽ phải thất bại!");
     }
 
     @AfterMethod
