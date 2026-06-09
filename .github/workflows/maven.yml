@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ "main", "master" ]
 
-permissions:
-  contents: read
-  checks: write
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -35,10 +31,8 @@ jobs:
         name: testng-reports
         path: target/surefire-reports/
 
-    - name: Publish Test Report to GitHub UI
-      uses: dorny/test-reporter@v1
-      if: always()
+    - name: Publish Test Summary to GitHub Actions Summary Page
+      uses: test-summary/action@v2
       with:
-        name: Selenium TestNG Results
-        path: target/surefire-reports/junitreports/TEST-*.xml
-        reporter: java-junit
+        paths: "target/surefire-reports/junitreports/TEST-*.xml"
+      if: always()
