@@ -42,17 +42,17 @@ public class LoginTest {
     }
 
     @Test
-    public void testStandardUserLogin() {
+    public void testSuccessfulLogin() {
         getLoginPage().enterCredentials("standard_user", "secret_sauce");
         getLoginPage().clickLogin();
-        Assert.assertTrue(getLoginPage().isLoginSuccessful(), "Đăng nhập bằng standard_user thất bại!");
+        Assert.assertTrue(getLoginPage().isLoginSuccessful(), "Đăng nhập thất bại!");
     }
 
     @Test
-    public void testProblemUserLogin() {
-        getLoginPage().enterCredentials("problem_user", "wrong_password"); // Cố tình dùng sai mật khẩu để tạo lỗi 🔴
+    public void testFailedLogin() {
+        getLoginPage().enterCredentials("standard_user", "wrong_password"); // Cố tình dùng sai mật khẩu để tạo lỗi 🔴
         getLoginPage().clickLogin();
-        Assert.assertTrue(getLoginPage().isLoginSuccessful(), "Đăng nhập bằng problem_user thất bại!");
+        Assert.assertTrue(getLoginPage().isLoginSuccessful(), "Đăng nhập đáng lẽ phải thành công!");
     }
 
     @AfterMethod
