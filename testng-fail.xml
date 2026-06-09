@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="FailSuite" verbose="1">
+    <test name="FailTest">
+        <classes>
+            <class name="com.lethilinh.cicd.tests.LoginTest">
+                <methods>
+                    <include name="testFailedLogin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
