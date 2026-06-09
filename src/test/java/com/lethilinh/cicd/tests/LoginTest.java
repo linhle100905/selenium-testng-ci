@@ -10,7 +10,8 @@ import org.testng.annotations.Test;
 import com.lethilinh.cicd.pages.LoginPage;
 
 public class LoginTest {
-    // Sử dụng ThreadLocal để cô lập WebDriver và LoginPage của mỗi luồng (thread) khi chạy song song
+    // Sử dụng ThreadLocal để cô lập WebDriver và LoginPage của mỗi luồng (thread)
+    // khi chạy song song
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     private static ThreadLocal<LoginPage> loginPage = new ThreadLocal<>();
 
@@ -25,18 +26,19 @@ public class LoginTest {
     @BeforeMethod
     public void setup() {
         ChromeOptions options = new ChromeOptions();
-        // Tự động kích hoạt chế độ Headless khi chạy trên GitHub Actions (môi trường CI)
+        // Tự động kích hoạt chế độ Headless khi chạy trên GitHub Actions (môi trường
+        // CI)
         if (System.getenv("CI") != null) {
             options.addArguments("--headless");
             options.addArguments("--disable-gpu");
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
         }
-        
+
         WebDriver webDriver = new ChromeDriver(options);
         webDriver.manage().timeouts().implicitlyWait(java.time.Duration.ofSeconds(10));
         webDriver.get("https://www.saucedemo.com/");
-        
+
         driver.set(webDriver);
         loginPage.set(new LoginPage(webDriver));
     }
@@ -50,9 +52,10 @@ public class LoginTest {
 
     @Test
     public void testFailedLogin() {
-        getLoginPage().enterCredentials("standard_user", "wrong_password"); // Cố tình dùng sai mật khẩu để tạo lỗi 🔴
+        getLoginPage().enterCredentials("standard_user", "wrong_password");
         getLoginPage().clickLogin();
-        Assert.assertTrue(getLoginPage().isLoginSuccessful(), "Đăng nhập đáng lẽ phải thành công!");
+        // Kiểm tra đăng nhập KHÔNG thành công (assertFalse)
+        Assert.assertFalse(getLoginPage().isLoginSuccessful(), "Đăng nhập đáng lẽ phải thất bại!"); // Sẽ Pass ✔
     }
 
     @AfterMethod
