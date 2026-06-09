@@ -10,8 +10,17 @@ import org.testng.annotations.Test;
 import com.lethilinh.cicd.pages.LoginPage;
 
 public class LoginTest {
-    private WebDriver driver;
-    private LoginPage loginPage;
+    // Sử dụng ThreadLocal để cô lập WebDriver và LoginPage của mỗi luồng (thread) khi chạy song song
+    private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
+    private static ThreadLocal<LoginPage> loginPage = new ThreadLocal<>();
+
+    public WebDriver getDriver() {
+        return driver.get();
+    }
+
+    public LoginPage getLoginPage() {
+        return loginPage.get();
+    }
 
     @BeforeMethod
     public void setup() {
@@ -24,30 +33,35 @@ public class LoginTest {
             options.addArguments("--disable-dev-shm-usage");
         }
         
-        driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(java.time.Duration.ofSeconds(10));
-        driver.get("https://www.saucedemo.com/");
-        loginPage = new LoginPage(driver);
+        WebDriver webDriver = new ChromeDriver(options);
+        webDriver.manage().timeouts().implicitlyWait(java.time.Duration.ofSeconds(10));
+        webDriver.get("https://www.saucedemo.com/");
+        
+        driver.set(webDriver);
+        loginPage.set(new LoginPage(webDriver));
     }
 
     @Test
     public void testStandardUserLogin() {
-        loginPage.enterCredentials("standard_user", "secret_sauce");
-        loginPage.clickLogin();
-        Assert.assertTrue(loginPage.isLoginSuccessful(), "Đăng nhập bằng standard_user thất bại!");
+        getLoginPage().enterCredentials("standard_user", "secret_sauce");
+        getLoginPage().clickLogin();
+        Assert.assertTrue(getLoginPage().isLoginSuccessful(), "Đăng nhập bằng standard_user thất bại!");
     }
 
     @Test
     public void testProblemUserLogin() {
-        loginPage.enterCredentials("problem_user", "wrong_password");
-        loginPage.clickLogin();
-        Assert.assertTrue(loginPage.isLoginSuccessful(), "Đăng nhập bằng problem_user thất bại!");
+        getLoginPage().enterCredentials("problem_user", "wrong_password"); // Cố tình dùng sai mật khẩu để tạo lỗi 🔴
+        getLoginPage().clickLogin();
+        Assert.assertTrue(getLoginPage().isLoginSuccessful(), "Đăng nhập bằng problem_user thất bại!");
     }
 
     @AfterMethod
     public void tearDown() {
-        if (driver != null) {
-            driver.quit();
+        WebDriver webDriver = getDriver();
+        if (webDriver != null) {
+            webDriver.quit();
         }
+        driver.remove();
+        loginPage.remove();
     }
 }
