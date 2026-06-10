@@ -31,19 +31,8 @@ jobs:
         name: testng-reports-success
         path: target/surefire-reports/
 
-    - name: Generate Job Summary
+    - name: Publish Test Summary to GitHub Actions Summary Page
+      uses: test-summary/action@v2
+      with:
+        paths: "target/surefire-reports/junitreports/TEST-*.xml"
       if: always()
-      run: |
-        cat << 'EOF' >> $GITHUB_STEP_SUMMARY
-        ### 🔦 Báo cáo kết quả kiểm thử tự động (TLU Student Login)
-
-        | Kịch bản kiểm thử | Trạng thái | Chi tiết kết quả | Ảnh chụp màn hình đính kèm |
-        |---|---|---|---|
-        | **1. Đăng nhập mật khẩu ĐÚNG** | 🟢 THÀNH CÔNG (PASSED) | Hệ thống đăng nhập và chuyển hướng thành công. | - |
-        | **2. Đăng nhập mật khẩu SAI** | ⚪ BỎ QUA | Kịch bản này không chạy trong workflow này. | - |
-
-        💡 **Mẹo:** Bạn có thể kéo xuống phần **Artifacts** bên dưới để tải file zip chứa đầy đủ các ảnh chụp màn hình tương ứng.
-
-        _Job summary generated at run-time_
-        EOF
-
