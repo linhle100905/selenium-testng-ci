@@ -52,9 +52,10 @@ public class LoginTest {
 
     @Test
     public void testFailedLogin() {
-        getLoginPage().enterCredentials("standard_user", "wrong_password"); // Cố tình dùng sai mật khẩu để tạo lỗi 🔴
+        getLoginPage().enterCredentials("standard_user", "wrong_password");
         getLoginPage().clickLogin();
-        Assert.assertTrue(getLoginPage().isLoginSuccessful(), "Đăng nhập đáng lẽ phải thành công!");
+        // Kiểm tra đăng nhập KHÔNG thành công (assertFalse)
+        Assert.assertFalse(getLoginPage().isLoginSuccessful(), "Đăng nhập đáng lẽ phải thất bại!"); // Sẽ Pass ✔
     }
 
     @AfterMethod
